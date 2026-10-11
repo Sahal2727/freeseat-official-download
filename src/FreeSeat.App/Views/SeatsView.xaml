@@ -1,0 +1,67 @@
+<UserControl x:Class="FreeSeat.App.Views.SeatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:FreeSeat.App.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="{DynamicResource BackgroundBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <DockPanel Margin="0,0,0,16">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                    <Button Content="Add seat" Command="{Binding AddSeatCommand}"/>
+                </StackPanel>
+                <StackPanel><TextBlock Text="Seat configuration" FontSize="28" FontWeight="Bold"/><TextBlock Text="Assign detected devices and Windows sessions. These assignments are for planning and monitoring; they do not isolate hardware." Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,16,0"/></StackPanel>
+            </DockPanel>
+            <DockPanel Margin="0,0,0,16">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="Import JSON" Command="{Binding OpenImportCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                    <Button Content="Export JSON" Command="{Binding ExportCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                    <Button Content="Create backup" Command="{Binding CreateBackupCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                    <Button Content="Restore last backup" Command="{Binding RestoreLastBackupCommand}" IsEnabled="{Binding HasBackup}"/>
+                </StackPanel>
+                <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+            </DockPanel>
+            <ItemsControl ItemsSource="{Binding Seats}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                            <StackPanel>
+                                <DockPanel Margin="0,0,0,14">
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                        <Button Content="Validate" Command="{Binding ValidateCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                                        <Button Content="Reset assignments" Command="{Binding ResetCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="220" FontSize="18" FontWeight="SemiBold"/>
+                                        <Button Content="Save name" Command="{Binding RenameCommand}" CommandParameter="{Binding Name}" Style="{StaticResource SecondaryButtonStyle}" Margin="8,0,12,0"/>
+                                        <CheckBox Content="Enabled" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DockPanel>
+                                <TextBlock Text="{Binding StatusDisplay}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                <UniformGrid Columns="2">
+                                    <StackPanel Margin="0,0,12,10"><TextBlock Text="Monitor" Foreground="{DynamicResource TextSecondaryBrush}"/><ComboBox ItemsSource="{Binding AvailableMonitors}" DisplayMemberPath="FriendlyName" SelectedValuePath="Id" SelectedValue="{Binding MonitorId, Mode=TwoWay}"/></StackPanel>
+                                    <StackPanel Margin="12,0,0,10"><TextBlock Text="Keyboard" Foreground="{DynamicResource TextSecondaryBrush}"/><ComboBox ItemsSource="{Binding AvailableKeyboards}" DisplayMemberPath="FriendlyName" SelectedValuePath="Id" SelectedValue="{Binding KeyboardId, Mode=TwoWay}"/></StackPanel>
+                                    <StackPanel Margin="0,0,12,0"><TextBlock Text="Mouse" Foreground="{DynamicResource TextSecondaryBrush}"/><ComboBox ItemsSource="{Binding AvailableMice}" DisplayMemberPath="FriendlyName" SelectedValuePath="Id" SelectedValue="{Binding MouseId, Mode=TwoWay}"/></StackPanel>
+                                    <StackPanel Margin="12,0,0,0"><TextBlock Text="Windows session" Foreground="{DynamicResource TextSecondaryBrush}"/><ComboBox ItemsSource="{Binding AvailableSessions}" DisplayMemberPath="DisplayName" SelectedValuePath="SessionId" SelectedValue="{Binding SessionId, Mode=TwoWay}"/></StackPanel>
+                                </UniformGrid>
+                                <TextBlock Text="Conflicts detected" Visibility="{Binding HasConflicts, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="{DynamicResource ErrorBrush}" Margin="0,12,0,0"/>
+                                <TextBlock Text="One or more assigned devices or sessions are unavailable" Visibility="{Binding HasUnavailableDevices, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="{DynamicResource WarningBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Style="{StaticResource CardStyle}" Visibility="{Binding ShowExportDialog, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,0,0,16">
+                <StackPanel><DockPanel><TextBlock Text="Configuration export" FontSize="18" FontWeight="SemiBold"/><Button Content="Close" Command="{Binding CloseExportCommand}" DockPanel.Dock="Right" Style="{StaticResource SecondaryButtonStyle}"/></DockPanel><TextBox Text="{Binding ExportJson}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="160" Margin="0,12,0,0"/></StackPanel>
+            </Border>
+            <Border Style="{StaticResource CardStyle}" Visibility="{Binding ShowImportDialog, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel><DockPanel><TextBlock Text="Import configuration" FontSize="18" FontWeight="SemiBold"/><Button Content="Close" Command="{Binding CloseImportCommand}" DockPanel.Dock="Right" Style="{StaticResource SecondaryButtonStyle}"/></DockPanel><TextBlock Text="Import replaces the current seat configuration. Export a copy first if you need to preserve it." Foreground="{DynamicResource WarningBrush}" TextWrapping="Wrap" Margin="0,8,0,8"/><TextBox Text="{Binding ImportJson, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="160"/><Button Content="Import configuration" Command="{Binding ImportCommand}" HorizontalAlignment="Left" Margin="0,8,0,0"/><TextBlock Text="{Binding ImportResultMessage}" TextWrapping="Wrap" Margin="0,8,0,0"/></StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

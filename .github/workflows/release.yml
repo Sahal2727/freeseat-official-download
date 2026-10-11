@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Test
+        run: dotnet test -c Release --no-build --verbosity normal
+
+      - name: Publish App
+        run: dotnet publish src/FreeSeat.App/FreeSeat.App.csproj -c Release -r win-x64 --self-contained false -o artifacts/publish
+
+      - name: Build Installer
+        uses: MinionGuy/inno-setup-action@v1.2.2
+        with:
+          script: src/FreeSeat.Setup/FreeSeat.iss
+          signtool: ${{ secrets.CODE_SIGN_TOOL }}
+          signtool-params: ${{ secrets.CODE_SIGN_PARAMS }}
+
+      - name: Generate Checksums
+        run: |
+          cd artifacts
+          certutil -hashfile FreeSeat-Setup.exe SHA256 > SHA256SUMS.txt
+          # Remove the first line (SHA256 hash of ...) and last line (CertUtil: ...)
+          (Get-Content SHA256SUMS.txt)[1] | Out-File -Encoding ASCII SHA256SUMS.txt
+        shell: pwsh
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            artifacts/FreeSeat-Setup.exe
+            artifacts/SHA256SUMS.txt
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            artifacts/FreeSeat-Setup.exe
+            artifacts/SHA256SUMS.txt
+          retention-days: 90

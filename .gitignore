@@ -1,0 +1,36 @@
+# Build outputs
+bin/
+obj/
+dist/
+
+# IDE
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# NuGet
+packages/
+*.nupkg
+
+# Test results
+TestResults/
+*.trx
+
+# Logs
+*.log
+
+# Inno Setup
+*.iss~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local development
+*.local
+local.settings.json

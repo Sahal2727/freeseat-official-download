@@ -1,0 +1,60 @@
+<UserControl x:Class="FreeSeat.App.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:FreeSeat.App.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="860"
+             Background="{DynamicResource BackgroundBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel HorizontalAlignment="Center" MaxWidth="600">
+            <Border Width="120" Height="120" CornerRadius="24" Background="{DynamicResource PrimaryBrush}" Margin="0,0,0,24">
+                <TextBlock Text="🪑" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="{Binding AppName}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="{Binding Tagline}" FontSize="18" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,8,0,4"/>
+                <TextBlock Text="{Binding Creator}" FontSize="14" Foreground="{DynamicResource TextDisabledBrush}"/>
+                <TextBlock Text="{Binding Version}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,12,0,0"/>
+                <TextBlock Text="{Binding Copyright}" FontSize="13" Foreground="{DynamicResource TextDisabledBrush}" Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <Border Style="{StaticResource CardStyle}" Margin="0,32,0,24">
+                <StackPanel>
+                    <TextBlock Text="{Binding Description}" FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}" TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding LicenseType}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,12,0,0" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,24">
+                <Button Content="GitHub" Command="{Binding OpenGitHubCommand}" MinWidth="120" Margin="0,0,8,0"/>
+                <Button Content="Documentation" Command="{Binding OpenDocumentationCommand}" MinWidth="120" Margin="8,0,8,0" Style="{StaticResource SecondaryButtonStyle}"/>
+                <Button Content="License" Command="{Binding OpenLicenseCommand}" MinWidth="120" Style="{StaticResource SecondaryButtonStyle}"/>
+            </StackPanel>
+
+            <Border Style="{StaticResource CardStyle}" Background="{DynamicResource InfoBrush}" BorderBrush="{DynamicResource InfoBrush}">
+                <StackPanel>
+                    <TextBlock Text="Important limitation" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnPrimaryBrush}"/>
+                    <TextBlock Text="FreeSeat provides configuration, hardware detection, and session monitoring. It cannot enforce physical keyboard, mouse, display, audio, or GPU isolation on standard consumer Windows." FontSize="13" Foreground="{DynamicResource TextOnPrimaryBrush}" Margin="0,8,0,0" TextWrapping="Wrap" Opacity="0.9" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}" Margin="0,24,0,0">
+                <StackPanel>
+                    <TextBlock Text="Build Information" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text=".NET Version: " FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding NetVersion}" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" FontFamily="{StaticResource MonospaceFontFamily}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock Text="Runtime: " FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding RuntimeVersion}" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" FontFamily="{StaticResource MonospaceFontFamily}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

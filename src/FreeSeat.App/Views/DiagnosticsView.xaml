@@ -1,0 +1,17 @@
+<UserControl x:Class="FreeSeat.App.Views.DiagnosticsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="{DynamicResource BackgroundBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <DockPanel Margin="0,0,0,20"><StackPanel DockPanel.Dock="Right" Orientation="Horizontal"><Button Content="Copy report" Command="{Binding CopyDiagnosticsCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/><Button Content="Collect diagnostics" Command="{Binding LoadDiagnosticsCommand}"/></StackPanel><StackPanel><TextBlock Text="Diagnostics" FontSize="28" FontWeight="Bold"/><TextBlock Text="Read-only system details for troubleshooting" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0"/></StackPanel></DockPanel>
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"><StackPanel><TextBlock Text="System report" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12"/><ItemsControl ItemsSource="{Binding DiagnosticItems}"><ItemsControl.ItemTemplate><DataTemplate><Grid Margin="0,6"><Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="{Binding Label}" Foreground="{DynamicResource TextSecondaryBrush}"/><TextBlock Grid.Column="1" Text="{Binding Value}" TextWrapping="Wrap"/></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl><TextBlock Text="Choose Collect diagnostics to refresh the report. Copy report places the collected text on the clipboard." Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,12,0,0"/></StackPanel></Border>
+            <TextBlock Text="{Binding BusyMessage}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

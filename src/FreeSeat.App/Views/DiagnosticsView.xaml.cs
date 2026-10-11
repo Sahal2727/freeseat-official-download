@@ -1,0 +1,14 @@
+using System.Windows.Controls;
+
+namespace FreeSeat.App.Views;
+
+/// <summary>
+/// Interaction logic for DiagnosticsView.xaml
+/// </summary>
+public partial class DiagnosticsView : UserControl
+{
+    public DiagnosticsView()
+    {
+        InitializeComponent();
+    }
+}
